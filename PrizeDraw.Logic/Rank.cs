@@ -16,7 +16,7 @@ namespace PrizeDraw.Logic
             string[] participants = st.Split(',');
 
             //requirement from notes
-            if (participants.Length < we.Length)
+            if (participants.Length < n)
                 return "Not enough participants";
 
             Dictionary<string, int> participantsNumbers = new Dictionary<string, int>();
@@ -31,11 +31,15 @@ namespace PrizeDraw.Logic
 
             //order the list decending by value
             IOrderedEnumerable<KeyValuePair<string, int>> orderedParticipantsNumbers = participantsNumbers.OrderByDescending(p => p.Value);
+
+            //get the winner using n
             KeyValuePair<string, int> winner = orderedParticipantsNumbers.ElementAt(n - 1);
 
-            IOrderedEnumerable<KeyValuePair<string, int>> orderedByNameParticipantsNumbers = orderedParticipantsNumbers.Where(p => p.Value == winner.Value);
+            //find all winners with the same winning number and order by name
+            IOrderedEnumerable<KeyValuePair<string, int>> orderedByNameParticipantsNumbers = orderedParticipantsNumbers.Where(p => p.Value == winner.Value).OrderBy(p=>p.Key);
 
-            return winner;
+            //return the winner
+            return orderedByNameParticipantsNumbers.FirstOrDefault().Key;
         }
 
         private static int GetSumOfRanks(string participant)
